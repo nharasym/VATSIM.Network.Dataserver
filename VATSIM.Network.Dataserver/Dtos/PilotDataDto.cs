@@ -4,16 +4,16 @@ namespace VATSIM.Network.Dataserver.Dtos
 {
     public class PilotDataDto : FsdDto
     {
-        public string IdentFlag;
-        public string Callsign;
-        public int Transponder;
-        public int Rating;
-        public double Latitude;
-        public double Longitude;
-        public int Altitude;
-        public int GroundSpeed;
-        public int Heading;
-        public int PressureDifference;
+        public string IdentFlag { get; }
+        public string Callsign { get; }
+        public int Transponder { get; }
+        public int Rating { get; }
+        public double Latitude { get; }
+        public double Longitude { get; }
+        public int Altitude { get; }
+        public int GroundSpeed { get; }
+        public int Heading { get; }
+        public int PressureDifference { get; }
 
         public PilotDataDto(string destination, string source, int packetNumber, int hopCount, string identFlag, string callsign, int transponder, int rating, double latitude, double longitude, int altitude, int groundSpeed, int heading, int pressureDifference) : base(destination, source, packetNumber, hopCount)
         {
@@ -31,7 +31,10 @@ namespace VATSIM.Network.Dataserver.Dtos
         
         public static PilotDataDto Deserialize(string[] fields)
         {
-            if (fields.Length < 14) throw new Exception("Failed to parse PD packet.");
+            if (fields.Length < 14)
+            {
+                throw new FormatException("Failed to parse PD packet.");
+            }
             try
             {
                 double hdgDbl = ParsePbh(fields[13]);
@@ -42,7 +45,7 @@ namespace VATSIM.Network.Dataserver.Dtos
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to parse PD packet.", e);
+                throw new FormatException("Failed to parse PD packet.", e);
             }
         }
 

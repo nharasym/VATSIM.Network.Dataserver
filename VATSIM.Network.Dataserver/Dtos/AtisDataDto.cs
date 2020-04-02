@@ -4,9 +4,9 @@ namespace VATSIM.Network.Dataserver.Dtos
 {
     public class AtisDataDto : FsdDto
     {
-        public string From;
-        public string Type;
-        public string Data;
+        public string From { get; }
+        public string Type { get; }
+        public string Data { get; }
 
         public AtisDataDto(string destination, string source, int packetNumber, int hopCount, string from, string type, string data) : base(destination, source, packetNumber, hopCount)
         {
@@ -17,7 +17,10 @@ namespace VATSIM.Network.Dataserver.Dtos
 
         public static AtisDataDto Deserialize(string[] fields)
         {
-            if (fields.Length < 10) throw new Exception("Failed to parse MC packet.");
+            if (fields.Length < 10)
+            {
+                throw new Exception("Failed to parse MC packet.");
+            }
             try
             {
                 return new AtisDataDto(fields[1], fields[2], Convert.ToInt32(fields[3].Substring(1)),

@@ -5,15 +5,15 @@ namespace VATSIM.Network.Dataserver.Dtos
 {
     public class AddClientDto : FsdDto
     {
-        public string Callsign;
-        public string Cid;
-        public int Hidden;
-        public int ProtocolRevision;
-        public int Rating;
-        public string RealName;
-        public string Server;
-        public int SimType;
-        public int Type;
+        public string Callsign { get; }
+        public string Cid { get; }
+        public int Hidden { get; }
+        public int ProtocolRevision { get; }
+        public int Rating { get; }
+        public string RealName { get; }
+        public string Server { get; }
+        public int SimType { get; }
+        public int Type { get; }
 
         public AddClientDto(string destination, string source, int packetNumber, int hopCount, string cid,
             string server, string callsign, int type, int rating, int protocolRevision, string realName, int simType,
@@ -65,7 +65,10 @@ namespace VATSIM.Network.Dataserver.Dtos
 
         public static AddClientDto Deserialize(string[] fields)
         {
-            if (fields.Length < 12) throw new Exception("Failed to parse ADDCLIENT packet.");
+            if (fields.Length < 12)
+            {
+                throw new FormatException("Failed to parse ADDCLIENT packet.");
+            }
             try
             {
                 return new AddClientDto(fields[1], fields[2], Convert.ToInt32(fields[3].Substring(1)),
@@ -75,7 +78,7 @@ namespace VATSIM.Network.Dataserver.Dtos
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to parse ADDCLIENT packet.", e);
+                throw new FormatException("Failed to parse ADDCLIENT packet.", e);
             }
         }
     }

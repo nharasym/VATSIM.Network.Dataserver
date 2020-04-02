@@ -4,24 +4,24 @@ namespace VATSIM.Network.Dataserver.Dtos
 {
     public class FlightPlanDto : FsdDto
     {
-        public string Callsign;
-        public string Revision;
-        public string Type;
-        public string Aircraft;
-        public string CruiseSpeed;
-        public string DepartureAirport;
-        public string EstimatedDepartureTime;
-        public string ActualDepartureTime;
-        public string Altitude;
-        public string DestinationAirport;
-        public string HoursEnroute;
-        public string MinutesEnroute;
-        public string HoursFuel;
-        public string MinutesFuel;
-        public string AlternateAirport;
-        public string Remarks;
-        public string Route;
-        public string Cid;
+        public string Callsign { get; }
+        public string Revision { get; }
+        public string Type { get; }
+        public string Aircraft { get; }
+        public string CruiseSpeed { get; }
+        public string DepartureAirport { get; }
+        public string EstimatedDepartureTime { get; }
+        public string ActualDepartureTime { get; }
+        public string Altitude { get; }
+        public string DestinationAirport { get; }
+        public string HoursEnroute { get; }
+        public string MinutesEnroute { get; }
+        public string HoursFuel { get; }
+        public string MinutesFuel { get; }
+        public string AlternateAirport { get; }
+        public string Remarks { get; }
+        public string Route { get; }
+        public string Cid { get; }
 
         public FlightPlanDto(string destination, string source, int packetNumber, int hopCount, string callsign,
             string revision, string type, string aircraft, string cruiseSpeed, string departureAirport,
@@ -51,7 +51,10 @@ namespace VATSIM.Network.Dataserver.Dtos
 
         public static FlightPlanDto Deserialize(string[] fields)
         {
-            if (fields.Length < 22) throw new Exception("Failed to parse PLAN packet.");
+            if (fields.Length < 22)
+            {
+                throw new FormatException("Failed to parse PLAN packet.");
+            }
             try
             {
                 return new FlightPlanDto(fields[1], fields[2], Convert.ToInt32(fields[3].Substring(1)),
@@ -61,7 +64,7 @@ namespace VATSIM.Network.Dataserver.Dtos
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to parse PLAN packet.", e);
+                throw new FormatException("Failed to parse PLAN packet.", e);
             }
         }
     }

@@ -30,7 +30,7 @@ namespace VATSIM.Network.Dataserver
         private static readonly Timer FileTimer = new Timer(15000);
         private static readonly Timer PrometheusMetricsTimer = new Timer(5000);
 
-        private static readonly AmazonS3Config AmazonS3Config = new AmazonS3Config()
+        private static readonly AmazonS3Config AmazonS3Config = new AmazonS3Config
         {
             ServiceURL = "https://sfo2.digitaloceanspaces.com"
         };
@@ -38,7 +38,7 @@ namespace VATSIM.Network.Dataserver
         private static readonly AmazonS3Client AmazonS3Client = new AmazonS3Client(AmazonS3Config);
 
         private static readonly Gauge TotalConnections = Metrics.CreateGauge("fsd_total_connections",
-            "Total number of connections to the FSD network.", new GaugeConfiguration()
+            "Total number of connections to the FSD network.", new GaugeConfiguration
             {
                 LabelNames = new[] {"server"}
             });
@@ -72,7 +72,10 @@ namespace VATSIM.Network.Dataserver
 
         private static void fsdConsumer_AddClientDtoReceived(object sender, DtoReceivedEventArgs<AddClientDto> p)
         {
-            if (_fsdClients.Any(c => c.Callsign == p.Dto.Callsign) || p.Dto.Callsign == "AFVDATA") return;
+            if (_fsdClients.Any(c => c.Callsign == p.Dto.Callsign) || p.Dto.Callsign == "AFVDATA")
+            {
+                return;
+            }
             FsdClient fsdClient = new FsdClient()
             {
                 Callsign = p.Dto.Callsign,
@@ -114,7 +117,10 @@ namespace VATSIM.Network.Dataserver
 
         private static void fsdConsumer_AtcDataDtoReceived(object sender, DtoReceivedEventArgs<AtcDataDto> p)
         {
-            if (p.Dto.Callsign == "AFVDATA") return;
+            if (p.Dto.Callsign == "AFVDATA")
+            {
+                return;
+            }
             FsdClient fsdClient = _fsdClients.Find(c => c.Callsign == p.Dto.Callsign);
             fsdClient.Frequency = p.Dto.Frequency.Insert(2, ".").Insert(0, "1");
             fsdClient.Latitude = p.Dto.Latitude;
@@ -141,7 +147,7 @@ namespace VATSIM.Network.Dataserver
                     string lastName = certRecord.SelectSingleNode("/root/user/name_last").InnerText;
                     string firstName = certRecord.SelectSingleNode("/root/user/name_first").InnerText;
                     Console.WriteLine($"Prefile received for {firstName} {lastName}.");
-                    fsdClient = new FsdClient()
+                    fsdClient = new FsdClient
                     {
                         Cid = p.Dto.Cid,
                         Realname = $"{firstName} {lastName}",
@@ -187,38 +193,38 @@ namespace VATSIM.Network.Dataserver
         {
             Console.WriteLine($"ATIS data for {p.Dto.From}: {p.Dto.Data}");
             FsdClient fsdClient = _fsdClients.Find(c => c.Callsign == p.Dto.From);
-            switch (p.Dto.Type)
+            if (p.Dto.Type == "T")
             {
-                case "T":
-                    switch (fsdClient.AppendAtis)
-                    {
-                        case true:
-                            fsdClient.AtisMessage += $"^§{p.Dto.Data}";
-                            break;
-                        case false:
-                            fsdClient.AtisMessage = p.Dto.Data;
-                            fsdClient.AppendAtis = true;
-                            break;
-                    }
-
-                    fsdClient.TimeLastAtisReceived = DateTime.UtcNow;
-                    break;
-                case "E":
-                    fsdClient.AppendAtis = false;
-                    break;
+                if (fsdClient.AppendAtis)
+                {
+                     fsdClient.AtisMessage += $"^§{p.Dto.Data}";
+                }
+                else
+                {
+                    fsdClient.AtisMessage = p.Dto.Data;
+                    fsdClient.AppendAtis = true;
+                }
+            }
+            else if (p.Dto.Type == "E")
+            {
+                fsdClient.AppendAtis = false;
             }
         }
 
         private static void fsdConsumer_NotifyDtoReceived(object sender, DtoReceivedEventArgs<NotifyDto> p)
         {
             if (p.Dto.Hostname == "127.0.0.1" || p.Dto.Name.ToLower().Contains("data") ||
-                p.Dto.Name.ToLower().Contains("afv") || _fsdServers.Any(s => s.Name == p.Dto.Name)) return;
-            FsdServer fsdServer = new FsdServer()
+                p.Dto.Name.ToLower().Contains("afv") || _fsdServers.Any(s => s.Name == p.Dto.Name))
+            {
+                return;
+            }
+            FsdServer fsdServer = new FsdServer
             {
                 Ident = p.Dto.Ident,
                 HostnameOrIp = p.Dto.Hostname,
                 Location = p.Dto.Location,
                 Name = p.Dto.Name,
+                ClientsConnectionAllowed = 1
             };
             _fsdServers.Add(fsdServer);
         }
@@ -245,14 +251,14 @@ namespace VATSIM.Network.Dataserver
             {
                 string contents = GenerateDatafileText();
 
-                PutObjectRequest txtPutRequest = new PutObjectRequest()
+                PutObjectRequest txtPutRequest = new PutObjectRequest
                 {
                     BucketName = "vatsim-data-us",
                     Key = "vatsim-data.txt",
                     ContentBody = contents,
                     CannedACL = S3CannedACL.PublicRead
                 };
-                AmazonS3Client.PutObjectAsync(txtPutRequest);
+               // AmazonS3Client.PutObjectAsync(txtPutRequest);
                 DefaultContractResolver contractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new SnakeCaseNamingStrategy()
@@ -262,14 +268,14 @@ namespace VATSIM.Network.Dataserver
                 {
                     ContractResolver = contractResolver,
                 });
-                PutObjectRequest jsonPutRequest = new PutObjectRequest()
+                PutObjectRequest jsonPutRequest = new PutObjectRequest
                 {
                     BucketName = "vatsim-data-us",
                     Key = "vatsim-data.json",
                     ContentBody = json,
                     CannedACL = S3CannedACL.PublicRead
                 };
-                AmazonS3Client.PutObjectAsync(jsonPutRequest);
+                // AmazonS3Client.PutObjectAsync(jsonPutRequest);
             }
             catch (Exception ex)
             {

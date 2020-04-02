@@ -5,14 +5,14 @@ namespace VATSIM.Network.Dataserver.Dtos
 {
     public class NotifyDto : FsdDto
     {
-        public int FeedFlag;
-        public string Ident;
-        public string Name;
-        public string Email;
-        public string Hostname;
-        public string Version;
-        public int Flags;
-        public string Location;
+        public int FeedFlag { get; }
+        public string Ident { get; }
+        public string Name { get; }
+        public string Email { get; }
+        public string Hostname { get; }
+        public string Version { get; }
+        public int Flags { get; }
+        public string Location { get; }
 
         public NotifyDto(string destination, string source, int packetNumber, int hopCount, int feedFlag, string ident,
             string name, string email, string hostname, string version, int flags, string location) : base(destination,
@@ -61,7 +61,10 @@ namespace VATSIM.Network.Dataserver.Dtos
 
         public static NotifyDto Deserialize(string[] fields)
         {
-            if (fields.Length < 13) throw new Exception("Failed to parse NOTIFY packet.");
+            if (fields.Length < 13)
+            {
+                throw new FormatException("Failed to parse NOTIFY packet.");
+            }
             try
             {
                 return new NotifyDto(fields[1], fields[2], Convert.ToInt32(fields[3].Substring(1)),
@@ -70,7 +73,7 @@ namespace VATSIM.Network.Dataserver.Dtos
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to parse NOTIFY packet.", e);
+                throw new FormatException("Failed to parse NOTIFY packet.", e);
             }
         }
     }

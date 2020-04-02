@@ -1,11 +1,10 @@
-using System;
 using System.Text;
 
 namespace VATSIM.Network.Dataserver.Dtos
 {
     public class PongDto : FsdDto
     {
-        public string Data;
+        public string Data { get; }
 
         public PongDto(string destination, string source, int packetNumber, int hopCount, string data) : base(destination, source, packetNumber, hopCount)
         {

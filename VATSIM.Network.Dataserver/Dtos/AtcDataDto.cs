@@ -5,13 +5,13 @@ namespace VATSIM.Network.Dataserver.Dtos
 {
     public class AtcDataDto : FsdDto
     {
-        public string Callsign;
-        public string Frequency;
-        public int FacilityType;
-        public int VisualRange;
-        public int Rating;
-        public double Latitude;
-        public double Longitude;
+        public string Callsign { get; }
+        public string Frequency { get; }
+        public int FacilityType { get; }
+        public int VisualRange { get; }
+        public int Rating { get; }
+        public double Latitude { get; }
+        public double Longitude { get; }
 
         public AtcDataDto(string destination, string source, int packetNumber, int hopCount, string callsign, string frequency, int facilityType, int visualRange, int rating, double latitude, double longitude) : base(destination, source, packetNumber, hopCount)
         {
@@ -57,7 +57,10 @@ namespace VATSIM.Network.Dataserver.Dtos
 
         public static AtcDataDto Deserialize(string[] fields)
         {
-            if (fields.Length < 13) throw new Exception("Failed to parse PD packet.");
+            if (fields.Length < 13)
+            {
+                throw new FormatException("Failed to parse PD packet.");
+            }
             try
             {
                 return new AtcDataDto(fields[1], fields[2], Convert.ToInt32(fields[3].Substring(1)),
@@ -66,7 +69,7 @@ namespace VATSIM.Network.Dataserver.Dtos
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to parse PD packet.", e);
+                throw new FormatException("Failed to parse PD packet.", e);
             }
         }
     }

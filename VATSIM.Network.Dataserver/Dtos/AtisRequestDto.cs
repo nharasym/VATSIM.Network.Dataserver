@@ -4,7 +4,7 @@ namespace VATSIM.Network.Dataserver.Dtos
 {
     public class AtisRequestDto : FsdDto
     {
-        public string From;
+        public string From { get; }
 
         public AtisRequestDto(string destination, string source, int packetNumber, int hopCount, string from) : base(destination, source, packetNumber, hopCount)
         {

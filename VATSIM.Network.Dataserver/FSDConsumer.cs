@@ -8,8 +8,8 @@ namespace VATSIM.Network.Dataserver
 {
     public class FsdConsumer
     {
-        public readonly SimpleTcpClient Client = new SimpleTcpClient();
-        public int DtoCount = 1;
+        public SimpleTcpClient Client { get; } = new SimpleTcpClient();
+        public int DtoCount { get; set; } = 1;
         private readonly string _host;
         private readonly int _port;
         public event EventHandler<DtoReceivedEventArgs<AddClientDto>> AddClientDtoReceived;
@@ -22,7 +22,7 @@ namespace VATSIM.Network.Dataserver
         public event EventHandler<DtoReceivedEventArgs<NotifyDto>> NotifyDtoReceived;
         private readonly Timer _serverTimer = new Timer(60000);
         private readonly Timer _clientTimer = new Timer(5000);
-        public readonly Timer AtisTimer = new Timer(30000);
+        public Timer AtisTimer { get; } = new Timer(30000);
 
         public FsdConsumer(string host, int port)
         {
@@ -85,6 +85,9 @@ namespace VATSIM.Network.Dataserver
                     case "NOTIFY":
                         NotifyDto notifyDto = NotifyDto.Deserialize(fields);
                         OnNotifyDtoReceived(new DtoReceivedEventArgs<NotifyDto>(notifyDto));
+                        break;
+                    default:
+                        // Not a DTO we need to handle...
                         break;
                 }
             }
