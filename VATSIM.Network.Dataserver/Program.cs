@@ -258,7 +258,7 @@ namespace VATSIM.Network.Dataserver
                     ContentBody = contents,
                     CannedACL = S3CannedACL.PublicRead
                 };
-               // AmazonS3Client.PutObjectAsync(txtPutRequest);
+               AmazonS3Client.PutObjectAsync(txtPutRequest);
                 DefaultContractResolver contractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new SnakeCaseNamingStrategy()
@@ -275,7 +275,7 @@ namespace VATSIM.Network.Dataserver
                     ContentBody = json,
                     CannedACL = S3CannedACL.PublicRead
                 };
-                // AmazonS3Client.PutObjectAsync(jsonPutRequest);
+                AmazonS3Client.PutObjectAsync(jsonPutRequest);
             }
             catch (Exception ex)
             {
