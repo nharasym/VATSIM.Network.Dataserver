@@ -19,7 +19,7 @@ namespace VATSIM.Network.Dataserver.Dtos
         {
             if (fields.Length < 10)
             {
-                throw new Exception("Failed to parse MC packet.");
+                throw new FormatException("Failed to parse MC packet.");
             }
             try
             {
@@ -28,7 +28,7 @@ namespace VATSIM.Network.Dataserver.Dtos
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to parse MC packet.", e);
+                throw new FormatException("Failed to parse MC packet.", e);
             }   
         }
     }
