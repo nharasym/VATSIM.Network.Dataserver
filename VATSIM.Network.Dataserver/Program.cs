@@ -76,7 +76,7 @@ namespace VATSIM.Network.Dataserver
             {
                 return;
             }
-            FsdClient fsdClient = new FsdClient()
+            FsdClient fsdClient = new FsdClient
             {
                 Callsign = p.Dto.Callsign,
                 Cid = p.Dto.Cid,
