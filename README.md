@@ -1,0 +1,2 @@
+# VATSIM.Network.Dataserver
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/207ecf140f394fa9956935fc21b27433)](https://app.codacy.com/gh/vatsimnetwork/VATSIM.Network.Dataserver?utm_source=github.com&utm_medium=referral&utm_content=vatsimnetwork/VATSIM.Network.Dataserver&utm_campaign=Badge_Grade_Dashboard)
