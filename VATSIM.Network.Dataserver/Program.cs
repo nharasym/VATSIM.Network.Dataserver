@@ -271,7 +271,7 @@ namespace VATSIM.Network.Dataserver
                 PutObjectRequest jsonPutRequest = new PutObjectRequest
                 {
                     BucketName = "vatsim-data-us",
-                    Key = "vatsim-data.json",
+                    Key = "vatsim-data-v2.json",
                     ContentBody = json,
                     CannedACL = S3CannedACL.PublicRead
                 };
